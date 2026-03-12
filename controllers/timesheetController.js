@@ -3,7 +3,7 @@ const Timesheet = require('../models/Timesheet');
 // Add new timesheet entry
 const addTimesheet = async (req, res) => {
     try {
-        const { project, module, phase, date, hours, userId, comment } = req.body;
+        const { project, module, phase, date, userId } = req.body;
 
         // If userId is provided and it's different from the requester's ID, check if the requester is an admin
         let finalUserId = req.user.id;
@@ -20,8 +20,6 @@ const addTimesheet = async (req, res) => {
             module,
             phase,
             date,
-            hours,
-            comment: comment || '',
             status: 'Pending'
         });
         await timesheet.save();
@@ -72,33 +70,9 @@ const updateTimesheetStatus = async (req, res) => {
     }
 };
 
-// Update timesheet comment (Admin or Owner)
-const updateTimesheetComment = async (req, res) => {
-    try {
-        const { comment } = req.body;
-        const timesheet = await Timesheet.findById(req.params.id);
-
-        if (!timesheet) {
-            return res.status(404).json({ message: 'Timesheet not found' });
-        }
-
-        // Only admin or the owner can update the comment
-        if (req.user.role !== 'admin' && timesheet.userId.toString() !== req.user.id.toString()) {
-            return res.status(403).json({ message: 'Not authorized to update this comment' });
-        }
-
-        timesheet.comment = comment;
-        await timesheet.save();
-        res.json(timesheet);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
 module.exports = {
     addTimesheet,
     getAllTimesheets,
     getMyTimesheets,
-    updateTimesheetStatus,
-    updateTimesheetComment
+    updateTimesheetStatus
 };

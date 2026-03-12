@@ -22,18 +22,10 @@ const timesheetSchema = new mongoose.Schema({
         type: String, // YYYY-MM-DD
         required: true
     },
-    hours: {
-        type: Number,
-        required: true
-    },
     status: {
         type: String,
         enum: ['Pending', 'Approved', 'Rejected'],
         default: 'Pending'
-    },
-    comment: {
-        type: String,
-        default: ''
     }
 }, { timestamps: true });
 
