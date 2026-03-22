@@ -1,5 +1,4 @@
 const Attendance = require('../models/Attendance');
-
 const checkIn = async (req, res) => {
     try {
         const date = new Date().toISOString().split('T')[0];
@@ -18,7 +17,6 @@ const checkIn = async (req, res) => {
             checkIn: time,
             status: 'Present'
         });
-
         await attendance.save();
         res.status(201).json(attendance);
     } catch (error) {
